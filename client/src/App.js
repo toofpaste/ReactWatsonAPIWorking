@@ -1,35 +1,34 @@
 import React, {Component} from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import {declareFunction} from "@babel/types";
+import Game from './Game';
+import NewNameControl from './NewFormControl';
+import Main  from './Main';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 class App extends Component {
-    constructor(props) {
+    constructor(props){
         super(props);
-        this.state = { apiResponse: ""};
+        this.state = {url : ""};
+        this.sendUrl = this.sendUrl.bind(this);
+    }
+    sendUrl(newUrl){
+        this.setState({url: newUrl});
     }
 
-    callAPI() {
-        fetch("http://localhost:9000/testAPI")
-            .then(res => res.text())
-            .then(res => this.setState({ apiResponse: res}))
-            .catch(err => err);
-    }
 
-    componentDidMount() {
-        this.callAPI();
-        console.log(this.state);
-    }
 
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <h1 className="App-title">Welcome to React</h1>
-                </header>
-                <p className="App-intro">{this.state.apiResponse}</p>
-            </div>
+            <BrowserRouter>
+                <div>
+                    <Switch>
+                        <Route path='/new' render={() => <NewNameControl onNewName={this.sendUrl}/>}/>
+                        <Route exact path='/' render={() => <Main/>}/>
+                        <Route path='/game' render={() => <Game completedUrl={this.state.url}/>}/>
+                    </Switch>
+                </div>
+            </BrowserRouter>
+
         );
     }
 }
