@@ -17,9 +17,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ![alt text](https://i.imgur.com/zLkqouJ.png)
 ## Available Scripts
 
-In the project directory, you will be able to run(CURRENTLY NOT RUNNING):
+Open 2 terminals and cd into api in one and client on the other
 
-### `npm start`
+### run `npm install` on both terminals
+### run `npm start` on both terminals (api first)
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
