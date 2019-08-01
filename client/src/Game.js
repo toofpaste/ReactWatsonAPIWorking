@@ -3,6 +3,7 @@ import './App.css';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import loading from './loading.gif';
+import thunking from './thunkin.gif';
 // let defl = 0;
 // let defH = 0;
 // let attH = 0;
@@ -16,7 +17,8 @@ let trait1 = [];
 let trait2 = [];
 let trait3 = [];
 let trait4 = [];
-
+let gameMode = "";
+let thinking = false;
 class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -1485,220 +1487,272 @@ class Game extends React.Component {
         //console.log("ai");
         //console.log(board);
         //place random start
-        let personInfo = JSON.parse(this.state.apiResponse);
-        globalInfo = personInfo;
-        console.log(personInfo);
-        //let challenge = personInfo[0]
-        let intellect = personInfo.traits[0].children[4].percentile;
-        let cautioness = personInfo.traits[1].children[1].percentile;
-        let selfDiscipline = personInfo.traits[1].children[4].percentile;
-        let assertiveness = personInfo.traits[2].children[1].percentile;
-        let stress = personInfo.traits[4].children[5].percentile;
-        let challenge = personInfo.needs[0].percentile;
-        console.log(this.state.url.newUrl);
-        console.log(intellect);
-        console.log(cautioness);
-        console.log(selfDiscipline);
-        console.log(assertiveness);
-        console.log(stress);
-        console.log(challenge);
-        if(!this.state.gameOver) {
-            if(this.state.url.newUrl.toLowerCase() === 'http://localhost:9000/testapi?name=realdonaldtrump'){
-                board = this.aiEasy(board);
-            }else if(challenge >= 0.5 && intellect >= 0.5) {
-                let att = this.aiAttack(board);
-                if (att.length >= 3) {
-                    //attH++;
-                    console.log("att: ");
-                    board = att;
-                } else {
-                    let def = this.aiDefend(board);
+        let that = this;
+        thinking = true;
+        setTimeout(timer, 500)
+
+        function timer() {
+            thinking = false;
+            let personInfo = JSON.parse(that.state.apiResponse);
+            globalInfo = personInfo;
+            console.log(personInfo);
+            //let challenge = personInfo[0]
+            let intellect = personInfo.traits[0].children[4].percentile;
+            let cautioness = personInfo.traits[1].children[1].percentile;
+            let selfDiscipline = personInfo.traits[1].children[4].percentile;
+            let assertiveness = personInfo.traits[2].children[1].percentile;
+            let stress = personInfo.traits[4].children[5].percentile;
+            let challenge = personInfo.needs[0].percentile;
+            console.log(that.state.url.newUrl);
+            console.log(intellect);
+            console.log(cautioness);
+            console.log(selfDiscipline);
+            console.log(assertiveness);
+            console.log(stress);
+            console.log(challenge);
+            let trump = false;
+            if (!that.state.gameOver) {
+                if (that.state.url.newUrl.toLowerCase() === 'http://localhost:9000/testapi?name=realdonaldtrump') {
+                    trump = true;
+                    gameMode = "Game Mode: Donald Trump. You are not allowed to move.";
+                    board[5][0] = that.state.player1;
+                    board[5][1] = that.state.player1;
+                    board[5][2] = that.state.player1;
+                    board[5][3] = that.state.player1;
+                    board[5][4] = that.state.player1;
+                    board[5][5] = that.state.player1;
+                    board[5][6] = that.state.player1;
+                    board[4][0] = that.state.player1;
+                    board[4][1] = that.state.player1;
+                    board[4][2] = that.state.player1;
+                    board[4][3] = that.state.player1;
+                    board[4][4] = that.state.player1;
+                    board[4][5] = that.state.player1;
+                    board[4][6] = that.state.player1;
+                    board[3][0] = that.state.player1;
+                    board[3][1] = that.state.player1;
+                    board[3][2] = that.state.player1;
+                    board[3][3] = that.state.player1;
+                    board[3][4] = that.state.player1;
+                    board[3][5] = that.state.player1;
+                    board[3][6] = that.state.player1;
+                    board[2][0] = that.state.player1;
+                    board[2][1] = that.state.player1;
+                    board[2][2] = that.state.player1;
+                    board[2][3] = that.state.player1;
+                    board[2][4] = that.state.player1;
+                    board[2][5] = that.state.player1;
+                    board[2][6] = that.state.player1;
+                    board[1][0] = that.state.player1;
+                    board[1][1] = that.state.player1;
+                    board[1][2] = that.state.player1;
+                    board[1][3] = that.state.player1;
+                    board[1][4] = that.state.player1;
+                    board[1][5] = that.state.player1;
+                    board[1][6] = that.state.player1;
+                    board[0][0] = that.state.player1;
+                    board[0][1] = that.state.player1;
+                    board[0][2] = that.state.player1;
+                    board[0][3] = that.state.player1;
+                    board[0][4] = that.state.player1;
+                    board[0][5] = that.state.player1;
+                    board[0][6] = that.state.player1;
+
+                } else if (challenge >= 0.02 && intellect >= 0.5) {
+                    gameMode = "Game Mode: Challenge, AI will have a well balanced attack/defence."
+                    let att = that.aiAttack(board);
+                    if (att.length >= 3) {
+                        //attH++;
+                        console.log("att: ");
+                        board = att;
+                    } else {
+                        let def = that.aiDefend(board);
+                        if (def.length >= 3) {
+                            //defH++;
+                            console.log("def: ");
+                            board = def;
+                        } else {
+                            let moreDef = that.aiMoreDef(board);
+                            if (moreDef.length >= 3) {
+                                //attl++;
+                                //console.log("attL: " + attl);
+                                console.log("defL");
+                                board = moreDef;
+                            } else {
+
+                                let moreAtt = that.aiMoreAtt(board);
+                                if (moreAtt.length >= 3) {
+                                    //defl++;
+                                    //console.log("defL: " + defl);
+                                    console.log("attL");
+                                    board = moreAtt;
+                                } else board = that.aiEasy(board);
+                            }
+                        }
+                    }
+                } else if (assertiveness <= 0.5 && stress >= 0.5) {
+                    gameMode = "Game Mode: Stress test and Assertive. AI will be more aggressive."
+                    let att = that.aiAttack(board);
+                    if (att.length >= 3) {
+                        //attH++;
+                        console.log("att: ");
+                        board = att;
+                    } else {
+                        let moreAtt = that.aiMoreAtt(board);
+                        if (moreAtt.length >= 3) {
+                            //defH++;
+                            console.log("attL ");
+                            board = moreAtt;
+                        } else {
+                            let def = that.aiDefend(board);
+                            if (def.length >= 3) {
+                                //attl++;
+                                //console.log("attL: " + attl);
+                                console.log("def");
+                                board = def;
+                            } else {
+                                let moreDef = that.aiMoreDef(board);
+                                if (moreDef.length >= 3) {
+                                    //defl++;
+                                    //console.log("defL: " + defl);
+                                    console.log("defL");
+                                    board = moreDef;
+                                } else board = that.aiEasy(board);
+                            }
+                        }
+                    }
+
+                } else if (assertiveness >= 0.5 && challenge >= 0.5) {
+                    gameMode = "Game Mode: Reserved. Your personality test has triggered a more defensive AI";
+                    let def = that.aiDefend(board);
                     if (def.length >= 3) {
-                        //defH++;
+                        //attH++;
                         console.log("def: ");
                         board = def;
                     } else {
-                        let moreDef = this.aiMoreDef(board);
+                        let moreDef = that.aiMoreDef(board);
+
                         if (moreDef.length >= 3) {
-                            //attl++;
-                            //console.log("attL: " + attl);
-                            console.log("defL");
+                            //defH++;
+                            console.log("defL ");
                             board = moreDef;
                         } else {
-
-                            let moreAtt = this.aiMoreAtt(board);
-                            if (moreAtt.length >= 3) {
-                                //defl++;
-                                //console.log("defL: " + defl);
-                                console.log("attL");
-                                board = moreAtt;
-                            } else board = this.aiEasy(board);
+                            let att = that.aiAttack(board);
+                            if (att.length >= 3) {
+                                //attl++;
+                                //console.log("attL: " + attl);
+                                console.log("att");
+                                board = att;
+                            } else {
+                                let moreAtt = that.aiMoreAtt(board);
+                                if (moreAtt.length >= 3) {
+                                    //defl++;
+                                    //console.log("defL: " + defl);
+                                    console.log("attL");
+                                    board = moreAtt;
+                                } else board = that.aiEasy(board);
+                            }
                         }
                     }
-                }
-                this.setState({board, currentPlayer: this.togglePlayer()});
-            }else if(assertiveness <= 0.5 && stress >= 0.5){
-                let att = this.aiAttack(board);
-                if (att.length >= 3) {
-                    //attH++;
-                    console.log("att: ");
-                    board = att;
-                } else {
-                    let moreAtt = this.aiMoreAtt(board);
-                    if (moreAtt.length >= 3) {
-                        //defH++;
-                        console.log("attL ");
-                        board = moreAtt;
+                } else if (cautioness >= 0.5) {
+                    let att = that.aiAttack(board);
+                    gameMode = "Game Mode: Cautious. Cautiousness was detected in your personality test. The AI will value Attacking more than defending."
+                    if (att.length >= 3) {
+                        //attH++;
+                        console.log("att: ");
+                        board = att;
                     } else {
-                        let def = this.aiDefend(board);
+
+                        let def = that.aiDefend(board);
                         if (def.length >= 3) {
-                            //attl++;
-                            //console.log("attL: " + attl);
-                            console.log("def");
+                            //defH++;
+                            console.log("def ");
                             board = def;
                         } else {
-                            let moreDef = this.aiMoreDef(board);
-                            if (moreDef.length >= 3) {
-                                //defl++;
-                                //console.log("defL: " + defl);
-                                console.log("defL");
-                                board = moreDef;
-                            } else board = this.aiEasy(board);
-                        }
-                    }
-                }
-                this.setState({board, currentPlayer: this.togglePlayer()});
-            }else if(assertiveness >= 0.5 && challenge >= 0.5){
-                let def = this.aiDefend(board);
-                if (def.length >= 3) {
-                    //attH++;
-                    console.log("def: ");
-                    board = def;
-                } else {
-                    let moreDef = this.aiMoreDef(board);
-
-                    if (moreDef.length >= 3) {
-                        //defH++;
-                        console.log("defL ");
-                        board = moreDef;
-                    } else {
-                        let att = this.aiAttack(board);
-                        if (att.length >= 3) {
-                            //attl++;
-                            //console.log("attL: " + attl);
-                            console.log("att");
-                            board = att;
-                        } else {
-                            let moreAtt = this.aiMoreAtt(board);
+                            let moreAtt = that.aiMoreAtt(board);
                             if (moreAtt.length >= 3) {
-                                //defl++;
-                                //console.log("defL: " + defl);
+                                //attl++;
+                                //console.log("attL: " + attl);
                                 console.log("attL");
                                 board = moreAtt;
-                            } else board = this.aiEasy(board);
+                            } else {
+
+                                let moreDef = that.aiMoreDef(board);
+                                if (moreDef.length >= 3) {
+                                    //defl++;
+                                    //console.log("defL: " + defl);
+                                    console.log("attL");
+                                    board = moreDef;
+                                } else board = that.aiEasy(board);
+                            }
                         }
                     }
-                }
-                this.setState({board, currentPlayer: this.togglePlayer()});
-            }else if (cautioness >= 0.5){
-                let att = this.aiAttack(board);
-
-                if (att.length >= 3) {
-                    //attH++;
-                    console.log("att: ");
-                    board = att;
                 } else {
-
-                    let def = this.aiDefend(board);
-                    if (def.length >= 3) {
-                        //defH++;
-                        console.log("def ");
-                        board = def;
+                    let att = that.aiAttack(board);
+                    gameMode = "Default Game Mode Selected. AI will act normally."
+                    if (att.length >= 3) {
+                        //attH++;
+                        console.log("att: ");
+                        board = att;
                     } else {
-                        let moreAtt = this.aiMoreAtt(board);
-                        if (moreAtt.length >= 3) {
-                            //attl++;
-                            //console.log("attL: " + attl);
-                            console.log("attL");
-                            board = moreAtt;
-                        } else {
 
-                            let moreDef = this.aiMoreDef(board);
-                            if (moreDef.length >= 3) {
-                                //defl++;
-                                //console.log("defL: " + defl);
+                        let def = that.aiDefend(board);
+                        if (def.length >= 3) {
+                            //defH++;
+                            console.log("def ");
+                            board = def;
+                        } else {
+                            let moreAtt = that.aiMoreAtt(board);
+                            if (moreAtt.length >= 3) {
+                                //attl++;
+                                //console.log("attL: " + attl);
                                 console.log("attL");
-                                board = moreDef;
-                            } else board = this.aiEasy(board);
+                                board = moreAtt;
+                            } else {
+
+                                let moreDef = that.aiMoreDef(board);
+                                if (moreDef.length >= 3) {
+                                    //defl++;
+                                    //console.log("defL: " + defl);
+                                    console.log("attL");
+                                    board = moreDef;
+                                } else board = that.aiEasy(board);
+                            }
                         }
                     }
+
                 }
-                this.setState({board, currentPlayer: this.togglePlayer()});
-            }else {
-                let att = this.aiAttack(board);
 
-                if (att.length >= 3) {
-                    //attH++;
-                    console.log("att: ");
-                    board = att;
-                } else {
-
-                    let def = this.aiDefend(board);
-                    if (def.length >= 3) {
-                        //defH++;
-                        console.log("def ");
-                        board = def;
-                    } else {
-                        let moreAtt = this.aiMoreAtt(board);
-                        if (moreAtt.length >= 3) {
-                            //attl++;
-                            //console.log("attL: " + attl);
-                            console.log("attL");
-                            board = moreAtt;
-                        } else {
-
-                            let moreDef = this.aiMoreDef(board);
-                            if (moreDef.length >= 3) {
-                                //defl++;
-                                //console.log("defL: " + defl);
-                                console.log("attL");
-                                board = moreDef;
-                            } else board = this.aiEasy(board);
-                        }
-                    }
-                }
-                this.setState({board, currentPlayer: this.togglePlayer()});
             }
 
-        }
+            if (!trump) {
+
+                that.setState({board, currentPlayer: that.togglePlayer()});
+                //place random end
 
 
+                //check win below
+                if (!that.state.gameOver) {
+                    let result = that.checkAll(board);
+                    if (result === that.state.player1) {
+                        //console.log("10"); //for red wins
+                        that.setState({board, gameOver: true, message: 'Player 1 (red) wins!'});
+                    } else if (result === that.state.player2) {
+                        //console.log("11"); //for yellow wins
+                        that.setState({board, gameOver: true, message: 'Player 2 (yellow) wins!'});
+                    } else if (result === 'draw') {
+                        //console.log("12"); //for draw game
+                        that.setState({board, gameOver: true, message: 'Draw game.'});
+                    } else {
+                        //console.log("13"); //toggles to next player
 
-        //place random end
-
-
-        //check win below
-        if (!this.state.gameOver) {
-            let result = this.checkAll(board);
-            if (result === this.state.player1) {
-                //console.log("10"); //for red wins
-                this.setState({board, gameOver: true, message: 'Player 1 (red) wins!'});
-            } else if (result === this.state.player2) {
-                //console.log("11"); //for yellow wins
-                this.setState({board, gameOver: true, message: 'Player 2 (yellow) wins!'});
-            } else if (result === 'draw') {
-                //console.log("12"); //for draw game
-                this.setState({board, gameOver: true, message: 'Draw game.'});
-            } else {
-                //console.log("13"); //toggles to next player
-
-                this.setState({board, currentPlayer: this.togglePlayer()});
-            }
-        }
-        else
-        {
-            //console.log("14"); //only if click after game is over
-            this.setState({message: 'Game over. Please start a new game.'});
+                        that.setState({board, currentPlayer: that.togglePlayer()});
+                    }
+                } else {
+                    //console.log("14"); //only if click after game is over
+                    that.setState({message: 'Game over. Please start a new game.'});
+                }
+            } else that.setState({board, gameOver: true, message: 'Despite the score: Trump Wins'});
         }
     }
 
@@ -1794,6 +1848,8 @@ class Game extends React.Component {
 
     componentWillMount() {
         //console.log("26"); //4: only on start
+        showLoad = 1;
+        gameMode = "";
       let that = this;
         setTimeout(timer, 4000)
         function timer(){
@@ -1826,7 +1882,7 @@ class Game extends React.Component {
 //<p className="App-intro">{this.state.apiResponse}</p>
     render() {
         return (
-            <div>
+            <div className="gameBody">
 
                 <Link className="button" to="/">Home</Link>
                 <div className="button" onClick={() => {this.initBoard()}}>New Game</div>
@@ -1838,8 +1894,9 @@ class Game extends React.Component {
                     {this.state.board.map((row, i) => (<Row key={i} row={row} play={this.play} />))}
                     </tbody>
                 </table>
-                <Load />
                 <p className="message">{this.state.message}</p>
+                <Load />
+
             </div>
         );
     }
@@ -1853,6 +1910,20 @@ const Row = ({ row, play }) => {
         </tr>
     );
 };
+const Think = ({}) => {
+    if(thinking){
+        return(
+        <img className="thinking" src={thunking}/>
+        )
+    }else return(<div></div>);
+}
+const Think2 = ({}) => {
+    if(thinking){
+        return(
+            <img className="thinking2" src={thunking}/>
+        )
+    }else return(<div></div>);
+}
 const Load = ({}) => {
     let show = "Getting Personality Traits...";
     console.log(showLoad);
@@ -1874,6 +1945,7 @@ const Load = ({}) => {
         }else return (
                 <div className='aiInfo'>
                     <h4>What the AI knows about you</h4>
+                    <h6>{gameMode}</h6>
                     <div className='container'>
 
                     {need[0].map((needs) =>
